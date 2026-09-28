@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head(${isEdit ? 'Chỉnh sửa sản phẩm' : 'Đăng bán sản phẩm'})}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="main-wrapper">
+    <div class="page-header">
+        <div class="page-title">
+            <h1 th:text="${isEdit ? '✏️ Chỉnh Sửa Sản Phẩm' : '➕ Đăng Bán Sản Phẩm Mới'}">Sản phẩm</h1>
+            <p th:text="${isEdit ? 'Cập nhật giá bán, thông tin mô tả và hình ảnh sản phẩm' : 'Tải lên hình ảnh lưu trữ trên Cloudinary và điền thông tin sản phẩm'}"></p>
+        </div>
+        <a th:href="@{/products}" class="btn btn-secondary">
+            &larr; Quay lại danh sách
+        </a>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span th:text="${errorMessage}">Lỗi</span>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; max-width: 680px; box-shadow: var(--shadow-sm);">
+        <form th:action="${isEdit ? '/products/edit/' + productFormDTO.id : '/products/new'}"
+              th:object="${productFormDTO}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" th:field="*{id}" th:if="${isEdit}" />
+            <input type="hidden" th:field="*{image}" th:if="${isEdit}" />
+
+            <div class="form-group">
+                <label class="form-label" for="name">Tên sản phẩm *</label>
+                <input type="text" id="name" th:field="*{name}" class="input-control"
+                       placeholder="Ví dụ: iPhone 15 Pro Max 256GB" required />
+                <div class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="price">Giá bán (VNĐ) *</label>
+                <input type="number" step="1000" id="price" th:field="*{price}" class="input-control"
+                       placeholder="Ví dụ: 25000000" required />
+                <div class="form-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="description">Mô tả chi tiết</label>
+                <textarea id="description" th:field="*{description}" class="input-control" rows="5"
+                          placeholder="Mô tả cấu hình, tình trạng, phụ kiện đi kèm..."></textarea>
+                <div class="form-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="imageFile">Hình ảnh sản phẩm (Upload Cloudinary)</label>
+                <input type="file" id="imageFile" name="imageFile" class="input-control"
+                       accept="image/*" onchange="previewImage(this, 'productImgPreview')" />
+
+                <div class="preview-box" id="productImgPreviewContainer" style="width: 200px; height: 160px;"
+                     th:style="${isEdit and productFormDTO.image != null ? 'display:flex; width: 200px; height: 160px;' : 'display:none; width: 200px; height: 160px;'}">
+                    <img id="productImgPreview"
+                         th:src="${isEdit and productFormDTO.image != null ? productFormDTO.image : ''}"
+                         alt="Preview Product Image" />
+                </div>
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top: 24px;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">
+                    <span th:text="${isEdit ? 'Lưu cập nhật' : 'Đăng bán ngay'}">Đăng bán</span>
+                </button>
+                <a th:href="@{/products}" class="btn btn-secondary">Hủy bỏ</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+function previewImage(input, previewId) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById(previewId).src = e.target.result;
+            document.getElementById(previewId + 'Container').style.display = 'flex';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+
+</body>
+</html>

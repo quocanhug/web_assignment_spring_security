@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layouts/layout :: head('Trang chủ')}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="main-wrapper">
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span th:text="${successMessage}">Thành công</span>
+    </div>
+
+    <!-- Hero Section -->
+    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #fff; padding: 48px 36px; border-radius: var(--radius-lg); margin-bottom: 36px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; box-shadow: var(--shadow-xl); border: 1px solid rgba(255,255,255,0.08);">
+        <div style="max-width: 640px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 700; color: #93c5fd; margin-bottom: 16px;">
+                <span>🚀 Spring Security 7 &bull; Spring Boot 4</span>
+            </div>
+            <h1 style="font-size: 34px; line-height: 1.2; margin-bottom: 14px; color: #ffffff;">
+                Hệ Thống Quản Lý & Bảo Mật UTEShop
+            </h1>
+            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 24px;">
+                Ứng dụng mẫu tích hợp xác thực đa phương thức (Email/Username), xác thực 2 lớp qua mã OTP Email, phân quyền Role-based, lưu Session bảo mật, MapStruct DTO, và lưu trữ hình ảnh trên Cloudinary.
+            </p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <a th:href="@{/products}" class="btn btn-primary">Khám phá sản phẩm</a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/products/new}" class="btn btn-secondary" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: #fff;">Đăng bán sản phẩm</a>
+                <a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="btn btn-secondary" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: #fff;">Đăng ký tài khoản</a>
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 24px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 260px;">
+            <div style="font-size: 13px; color: #94a3b8; margin-bottom: 12px; font-weight: 600;">TÀI KHOẢN MẪU TEST</div>
+            <div style="font-size: 13px; line-height: 1.8; color: #e2e8f0;">
+                <div>👑 <strong>Admin:</strong> <code style="color:#60a5fa;">admin</code> / <code style="color:#60a5fa;">123456</code></div>
+                <div>👤 <strong>User:</strong> <code style="color:#34d399;">user01</code> / <code style="color:#34d399;">123456</code></div>
+                <div>👤 <strong>User 2:</strong> <code style="color:#34d399;">user02</code> / <code style="color:#34d399;">123456</code></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">👥</div>
+            <div class="stat-info">
+                <h3 th:text="${totalUsers}">0</h3>
+                <p>Tổng số Người dùng</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon emerald">📦</div>
+            <div class="stat-info">
+                <h3 th:text="${totalProducts}">0</h3>
+                <p>Tổng số Sản phẩm</p>
+            </div>
+        </div>
+
+        <div class="stat-card" sec:authorize="isAuthenticated()">
+            <div class="stat-icon purple">🏷️</div>
+            <div class="stat-info">
+                <h3 th:text="${myProductsCount}">0</h3>
+                <p>Sản phẩm của bạn</p>
+            </div>
+        </div>
+
+        <div class="stat-card" sec:authorize="!isAuthenticated()">
+            <div class="stat-icon amber">🔒</div>
+            <div class="stat-info">
+                <h3>OTP Email</h3>
+                <p>Bảo mật xác thực 2 lớp</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest Products Section -->
+    <div class="page-header" style="margin-top: 16px;">
+        <div class="page-title">
+            <h2>Sản phẩm mới đăng</h2>
+            <p>Khám phá các sản phẩm công nghệ nổi bật được đăng bởi thành viên</p>
+        </div>
+        <a th:href="@{/products}" class="btn btn-secondary btn-sm">Xem tất cả &rarr;</a>
+    </div>
+
+    <div class="products-grid">
+        <div th:each="p : ${latestProducts}" class="product-card">
+            <div class="product-thumb">
+                <img th:src="${p.image != null and !#strings.isEmpty(p.image) ? p.image : '/images/product-default.png'}"
+                     th:alt="${p.name}"
+                     onerror="this.src='/images/product-default.png'" />
+                <span class="product-price-tag" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                    10,000,000 VNĐ
+                </span>
+            </div>
+            <div class="product-body">
+                <h3 class="product-title" th:text="${p.name}">Tên sản phẩm</h3>
+                <p class="product-desc" th:text="${p.description}">Mô tả chi tiết sản phẩm...</p>
+                <div class="product-footer">
+                    <div class="product-creator">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span th:text="${p.userFullName}">Người đăng</span>
+                    </div>
+                    <a th:href="@{/products/{id}(id=${p.id})}" class="btn btn-secondary btn-sm">Chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
