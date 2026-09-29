@@ -14,7 +14,7 @@ public interface UserMapper {
     @Mapping(target = "roleName", source = "role.name")
     @Mapping(target = "roleId", source = "role.id")
     @Mapping(target = "productCount", expression = "java(user.getProducts() != null ? (long) user.getProducts().size() : 0L)")
-    UserDTO toDto(User user);
+    UserDTO toDTO(User user);
 
     List<UserDTO> toDtoList(List<User> users);
 

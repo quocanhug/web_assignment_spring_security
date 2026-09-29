@@ -24,9 +24,14 @@
             <h1 style="font-size: 34px; line-height: 1.2; margin-bottom: 14px; color: #ffffff;">
                 Hệ Thống Quản Lý & Bảo Mật UTEShop
             </h1>
-            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 24px;">
+            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 20px;">
                 Ứng dụng mẫu tích hợp xác thực đa phương thức (Email/Username), xác thực 2 lớp qua mã OTP Email, phân quyền Role-based, lưu Session bảo mật, MapStruct DTO, và lưu trữ hình ảnh trên Cloudinary.
             </p>
+            <div sec:authorize="isAuthenticated()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); padding: 12px 18px; border-radius: var(--radius-md); margin-bottom: 22px;">
+                <p style="margin: 0; font-size: 17px; color: #ffffff;">
+                    Xin chào <strong style="color: #60a5fa;" th:text="${#authentication.principal.fullName}">User</strong>!
+                </p>
+            </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                 <a th:href="@{/products}" class="btn btn-primary">Khám phá sản phẩm</a>
                 <a sec:authorize="isAuthenticated()" th:href="@{/products/new}" class="btn btn-secondary" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: #fff;">Đăng bán sản phẩm</a>

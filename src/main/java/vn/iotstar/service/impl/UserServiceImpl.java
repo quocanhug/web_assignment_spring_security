@@ -120,8 +120,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản."));
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setEnabled(true);
         userRepository.save(user);
-        log.info("Password reset successfully for user: {}", user.getEmail());
+        log.info("Password reset successfully and account enabled for user: {}", user.getEmail());
         return true;
     }
 
@@ -137,7 +138,7 @@ public class UserServiceImpl implements UserService {
         } else {
             users = userRepository.findAll(pageable);
         }
-        return users.map(userMapper::toDto);
+        return users.map(userMapper::toDTO);
     }
 
     @Override
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với id: " + id));
-        return userMapper.toDto(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
@@ -202,7 +203,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         user = userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
@@ -246,7 +247,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user = userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toDTO(user);
     }
 
     @Override

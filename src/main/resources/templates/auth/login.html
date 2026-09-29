@@ -16,7 +16,12 @@
         <!-- Alert messages -->
         <div th:if="${param.error}" class="alert alert-danger">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <span>Tên đăng nhập/email hoặc mật khẩu không chính xác.</span>
+            <span th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null and session['SPRING_SECURITY_LAST_EXCEPTION'].class.simpleName == 'DisabledException'}">
+                Tài khoản chưa được kích hoạt hoặc đã bị khóa. Vui lòng xác thực mã OTP đăng ký!
+            </span>
+            <span th:unless="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null and session['SPRING_SECURITY_LAST_EXCEPTION'].class.simpleName == 'DisabledException'}">
+                Tên đăng nhập/email hoặc mật khẩu không chính xác.
+            </span>
         </div>
 
         <div th:if="${param.logout}" class="alert alert-success">
