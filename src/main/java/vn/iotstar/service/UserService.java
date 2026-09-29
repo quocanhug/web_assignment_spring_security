@@ -1,34 +1,14 @@
 package vn.iotstar.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import vn.iotstar.dto.*;
+import vn.iotstar.dto.UserDTO;
 
 public interface UserService {
-
-    void register(RegisterDTO dto);
-
-    boolean verifyRegistrationOtp(String email, String token);
-
-    void resendOtp(String email, String type);
-
-    void sendForgotPasswordOtp(String email);
-
-    boolean resetPassword(ResetPasswordDTO dto);
-
-    Page<UserDTO> findAll(String keyword, Pageable pageable);
-
+    Page<UserDTO> findAll(String keyword, int page, int size);
     UserDTO findById(Long id);
-
-    UserFormDTO findFormById(Long id);
-
-    UserDTO createUser(UserFormDTO dto);
-
-    UserDTO updateUser(Long id, UserFormDTO dto);
-
-    void deleteUser(Long id);
-
-    void toggleUserStatus(Long id);
-
+    UserDTO create(UserDTO dto);
+    UserDTO update(Long id, UserDTO dto);
+    void delete(Long id);
     long countUsers();
+    long countProducts(Long userId);
 }

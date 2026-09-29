@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "otp_tokens")
+@Table(name = "otp_tokens", indexes = @Index(name = "idx_otp_email_type", columnList = "email,type"))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,27 +18,25 @@ public class OtpToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 10)
-    private String token;
-
     @Column(nullable = false, length = 150)
     private String email;
 
-    @Column(nullable = false, length = 30)
-    private String type; // "REGISTER" or "FORGOT_PASSWORD"
+    @Column(nullable = false, length = 100)
+    private String otpHash;
 
-    @Column(name = "expiry_date", nullable = false)
-    private LocalDateTime expiryDate;
+    @Column(nullable = false, length = 30)
+    private String type;
 
     @Column(nullable = false)
+    private LocalDateTime expiresAt;
+
+    @Column(nullable = false)
+    private int attempts;
+
     @Builder.Default
+    @Column(nullable = false)
     private boolean used = false;
 
-    @Column(name = "created_at", nullable = false)
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiryDate);
-    }
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 }

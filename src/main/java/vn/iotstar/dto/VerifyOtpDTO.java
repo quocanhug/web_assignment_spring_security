@@ -1,20 +1,15 @@
 package vn.iotstar.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import jakarta.validation.constraints.*;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
 public class VerifyOtpDTO {
-
-    @NotBlank(message = "Email không được để trống")
+    @NotBlank
+    @Email
     private String email;
 
-    @NotBlank(message = "Mã OTP không được để trống")
+    @NotBlank
+    @Size(min = 6, max = 6)
     private String otp;
-
-    private String type; // "REGISTER" or "FORGOT_PASSWORD"
 }

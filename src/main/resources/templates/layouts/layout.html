@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="head(title)">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title} + ' - UTEShop'">UTEShop</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/x-icon" th:href="@{/images/avatar-default.svg}">
-</head>
-<body>
-
-<header th:replace="~{fragments/header :: header}"></header>
-
-<main class="main-wrapper">
-    <!-- Flash Messages -->
-    <div th:if="${successMessage}" class="alert alert-success">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span th:text="${successMessage}">Thành công!</span>
-    </div>
-    
-    <div th:if="${errorMessage}" class="alert alert-danger">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <span th:text="${errorMessage}">Đã xảy ra lỗi!</span>
-    </div>
-</main>
-
-<footer th:replace="~{fragments/footer :: footer}"></footer>
-
-</body>
+<!DOCTYPE html> 
+<html xmlns:th="http://www.thymeleaf.org"> 
+<head th:fragment="head(title)"> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title th:text="${title ?: 'IOTSTAR SHOP'}">IOTSTAR SHOP</title> 
+    <link rel="stylesheet" th:href="@{/css/app.css}"> 
+</head> 
+<body> 
+<div th:fragment="page(content)"> 
+    <header th:replace="~{fragments/header :: header}"></header> 
+    <main class="container" th:replace="${content}"></main> 
+    <footer th:replace="~{fragments/footer :: footer}"></footer> 
+</div> 
+</body> 
 </html>
