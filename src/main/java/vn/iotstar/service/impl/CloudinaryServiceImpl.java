@@ -30,7 +30,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             throw new IllegalArgumentException("Chỉ cho phép file hình ảnh");
         }
 
-        // Try upload to Cloudinary if cloud_name is configured
         if (cloudinary.config.cloudName != null && !cloudinary.config.cloudName.isBlank()
                 && !cloudinary.config.cloudName.equalsIgnoreCase("dfdfdf")) {
             try {
@@ -43,11 +42,9 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                         String.valueOf(result.get("public_id"))
                 );
             } catch (Exception ignored) {
-                // Fall through to local fallback
             }
         }
 
-        // Fallback to local uploads directory
         try {
             Path uploadDir = Paths.get("uploads");
             if (!Files.exists(uploadDir)) {
@@ -77,8 +74,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             cloudinary.uploader().destroy(
                     publicId, Map.of("resource_type", "image")
             );
-        } catch (Exception e) {
-            // Fail silently or log
+        } catch (Exception ignored) {
         }
     }
 }
